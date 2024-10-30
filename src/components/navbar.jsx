@@ -79,7 +79,7 @@ export const PipelineToolbar = () => {
       >
         {[...INITIAL_NODES, ...customNodes].map((node) => (
           <DraggableNode
-            key={node.type}
+            key={node.config.label}
             type={node.type}
             label={node.config.label}
           />
@@ -87,6 +87,8 @@ export const PipelineToolbar = () => {
         <button onClick={() => setIsModalOpen(true)}>Create a Node</button>
       </div>
 
+      {console.log("Custom NOdes", customNodes)}
+      {console.log("Initial NOdes", INITIAL_NODES)}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
