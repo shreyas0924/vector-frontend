@@ -13,21 +13,33 @@ export const useStore = create((set, get) => ({
   edges: [],
 
   nodeIDs: {}, // Store node IDs based on type
+  customNodes: [],
 
-  getNodeID: (type) => {
-    const newIDs = { ...get().nodeIDs };
-
-    if (newIDs[type] === undefined) {
-      newIDs[type] = 0;
-    }
-
-    newIDs[type] += 1;
-
-    set({ nodeIDs: newIDs });
-
-    return `${type}-${newIDs[type]}`;
+  addCustomNode: (nodeConfig) => {
+    set((state) => ({
+      customNodes: [...state.customNodes, nodeConfig],
+    }));
   },
+  // getNodeID: (type) => {
+  //   const newIDs = { ...get().nodeIDs };
 
+  //   if (newIDs[type] === undefined) {
+  //     newIDs[type] = 0;
+  //   }
+
+  //   newIDs[type] += 1;
+
+  //   set({ nodeIDs: newIDs });
+
+  //   return `${type}-${newIDs[type]}`;
+  // },
+  getNodeID: (type) => {
+    set((state) => {
+      const newID = (state.nodeIDs[type] || 0) + 1;
+      return { nodeIDs: { ...state.nodeIDs, [type]: newID } };
+    });
+    return `${type}-${get().nodeIDs[type]}`;
+  },
   addNode: (node) => {
     set({
       nodes: [...get().nodes, node],
@@ -87,4 +99,15 @@ export const useStore = create((set, get) => ({
       }),
     });
   },
+  //  updateEdgeField: (nodeId, fieldName, fieldValue) => {
+  //   set({
+  //     nodes: get().nodes.map((node) => {
+  //       if (node.id === nodeId) {
+  //         node.data = { ...node.data, [fieldName]: fieldValue };
+  //       }
+
+  //       return node;
+  //     }),
+  //   });
+  // },
 }));
