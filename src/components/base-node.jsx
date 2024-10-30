@@ -185,22 +185,16 @@
 // };
 
 import { useState, useEffect } from "react";
-
 import { Handle, NodeResizer, Position } from "reactflow";
+import { useStore } from "../zustand/store";
 
 export const BaseNode = ({
   id,
-
   data,
-
   label,
-
   handleValues,
-
   inputFields,
-
   description,
-
   resizable,
 }) => {
   const [fieldValues, setFieldValues] = useState(
@@ -216,23 +210,24 @@ export const BaseNode = ({
   );
 
   const [dynamicHandles, setDynamicHandles] = useState([]);
-
+  const { updateNodeField } = useStore();
   // Function to extract variables from text content
 
   const extractVariables = (content) => {
-    const regex = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;
-
+    // Only match complete variable patterns with both {{ and }}
+    const regex = /\{\{([^{}]+)\}\}/g;
     const variables = new Set();
 
     let match;
-
     while ((match = regex.exec(content)) !== null) {
-      variables.add(match[1]);
+      const varName = match[1].trim();
+      if (varName) {
+        variables.add(varName);
+      }
     }
 
     return Array.from(variables);
   };
-
   // Update dynamic handles when text content changes
 
   useEffect(() => {
@@ -243,29 +238,45 @@ export const BaseNode = ({
 
       const newHandles = variables.map((variable, index) => ({
         id: `${id}-${variable}`,
-
-        type: "source",
-
+        type: "target",
         position: Position.Left,
-
         style: {
-          top: `${((index + 1) * 100) / (variables.length + 1)}%`,
-
+          top: `${(index + 1) * (80 / (variables.length + 1))}%`,
           background: "#ffffff",
-
           border: "2px solid #6B48CC",
-
           width: 12,
-
           height: 12,
-
           borderRadius: "50%",
+          left: -6,
+        },
+        data: {
+          label: variable,
         },
       }));
 
       setDynamicHandles(newHandles);
     }
   }, [fieldValues["content"], inputFields, id]);
+
+  // useEffect(() => {
+  //   if (dynamicHandles.length > 0) {
+  //     updateNodeField(id, "handles", dynamicHandles);
+
+  //   }
+  // }, [dynamicHandles, id]);
+
+  // Add a dependency check to prevent unnecessary updates
+  useEffect(() => {
+    if (dynamicHandles.length > 0) {
+      const currentHandles = data?.handles || [];
+      const areHandlesEqual =
+        JSON.stringify(currentHandles) === JSON.stringify(dynamicHandles);
+
+      if (!areHandlesEqual) {
+        useStore.getState().updateNodeField(id, "handles", dynamicHandles);
+      }
+    }
+  }, [dynamicHandles, id, data?.handles]);
 
   const handleInputChange = (name, value) => {
     setFieldValues((prev) => ({ ...prev, [name]: value }));
@@ -355,26 +366,27 @@ export const BaseNode = ({
 
       {/* Dynamic handles from variables */}
 
-      {dynamicHandles.map((handle) => (
-        <Handle
-          key={handle.id}
-          id={handle.id}
-          type={handle.type}
-          position={handle.position}
-          style={{
-            background: "#ffffff",
-
-            border: "2px solid #6B48CC",
-
-            width: 12,
-
-            height: 12,
-
-            borderRadius: "50%",
-
-            ...handle.style,
-          }}
-        />
+      {dynamicHandles?.map((handle) => (
+        <div key={handle.id}>
+          {console.log(handle)}
+          <Handle
+            id={handle.id}
+            type={handle.type}
+            position={handle.position}
+            style={handle.style}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: -4,
+              top: handle.style.top,
+              fontSize: "12px",
+              transform: "translateX(-100%)",
+            }}
+          >
+            {handle.data.label}
+          </div>
+        </div>
       ))}
 
       {resizable && (

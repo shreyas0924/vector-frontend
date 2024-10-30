@@ -131,28 +131,25 @@ export const INITIAL_NODES = [
 
   {
     type: "text",
-
     config: {
       label: "Text",
-
       inputFields: [
         {
           name: "content",
-
           label: "Content",
-
           type: "textarea",
-
           defaultValue: "{{input}}",
         },
       ],
-
-      handleValues: (id) => [
+      handleValues: (id, variables = []) => [
         { id: `${id}-input`, type: "target", position: Position.Top },
-
         { id: `${id}-output`, type: "source", position: Position.Bottom },
+        ...variables.map((varName) => ({
+          id: `${id}-${varName}`,
+          type: "target",
+          position: Position.Left,
+        })),
       ],
-
       resizable: true,
     },
   },

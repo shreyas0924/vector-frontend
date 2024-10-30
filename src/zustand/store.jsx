@@ -49,33 +49,31 @@ export const useStore = create((set, get) => ({
   onConnect: (connection) => {
     const { source, target, sourceHandle, targetHandle } = connection;
 
-    // Validate the connection if needed
-
-    // For example, check if the source and target types are compatible
-
     const newEdge = {
-      id: `${source}-${sourceHandle}-${target}-${targetHandle}`, // Unique ID for the edge
-
+      id: `${source}-${sourceHandle}-${target}-${targetHandle}`,
       source,
-
       target,
-
       sourceHandle,
-
       targetHandle,
-
       type: "smoothstep",
-
       animated: true,
-
       markerEnd: { type: MarkerType.Arrow, height: "20px", width: "20px" },
     };
 
-    // Add the new edge to the current edges
+    // Check if this edge already exists
+    const edgeExists = get().edges.some(
+      (edge) =>
+        edge.source === source &&
+        edge.target === target &&
+        edge.sourceHandle === sourceHandle &&
+        edge.targetHandle === targetHandle
+    );
 
-    set({
-      edges: addEdge(newEdge, get().edges),
-    });
+    if (!edgeExists) {
+      set({
+        edges: addEdge(newEdge, get().edges),
+      });
+    }
   },
 
   updateNodeField: (nodeId, fieldName, fieldValue) => {

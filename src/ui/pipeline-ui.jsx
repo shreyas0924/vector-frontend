@@ -4,14 +4,6 @@ import ReactFlow, { Controls, Background, MiniMap, addEdge } from "reactflow";
 
 import { shallow } from "zustand/shallow";
 
-import { InputNode } from "../nodes/input-node";
-
-import { LLMNode } from "../nodes/llm-node";
-
-import { OutputNode } from "../nodes/output-node";
-
-import { TextNode } from "../nodes/text-node";
-
 import "reactflow/dist/style.css";
 
 import { INITIAL_NODES } from "../data/initial-state";
