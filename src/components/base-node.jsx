@@ -15,7 +15,6 @@ export const BaseNode = ({
     inputFields?.reduce(
       (acc, field) => ({
         ...acc,
-
         [field.name]: data?.[field.name] || field.defaultValue,
       }),
 
@@ -24,8 +23,6 @@ export const BaseNode = ({
   );
 
   const [dynamicHandles, setDynamicHandles] = useState([]);
-  const { updateNodeField } = useStore();
-  // Function to extract variables from text content
 
   const extractVariables = (content) => {
     // Only match complete variable patterns with both {{ and }}
@@ -42,8 +39,8 @@ export const BaseNode = ({
 
     return Array.from(variables);
   };
-  // Update dynamic handles when text content changes
 
+  // Update dynamic handles when text content changes
   useEffect(() => {
     if (inputFields?.some((field) => field.type === "textarea")) {
       const textContent = fieldValues["content"] || "";
@@ -72,14 +69,6 @@ export const BaseNode = ({
     }
   }, [fieldValues["content"], inputFields, fieldValues, id]);
 
-  // useEffect(() => {
-  //   if (dynamicHandles.length > 0) {
-  //     updateNodeField(id, "handles", dynamicHandles);
-
-  //   }
-  // }, [dynamicHandles, id]);
-
-  // Add a dependency check to prevent unnecessary updates
   useEffect(() => {
     if (dynamicHandles.length > 0) {
       const currentHandles = data?.handles || [];
@@ -88,7 +77,6 @@ export const BaseNode = ({
 
       if (!areHandlesEqual) {
         useStore.getState().updateNodeField(id, "handles", dynamicHandles);
-        // useStore.getState().updateEd(id, "handles", dynamicHandles);
       }
     }
   }, [dynamicHandles, id, data?.handles]);
@@ -126,17 +114,13 @@ export const BaseNode = ({
                 className="min-w-[80%] mt-1 rounded-lg p-2 -mx-1 bg-transparent border border-gray-300 resize-none"
                 rows={Math.max(
                   2,
-
                   (fieldValues[field.name] || "").split("\n").length
                 )}
                 style={{
                   minWidth: "200px",
-
                   maxWidth: "350px",
-
                   width: `${Math.min(
                     300,
-
                     (fieldValues[field.name] || "").length * 4
                   )}px`,
                 }}
@@ -156,7 +140,6 @@ export const BaseNode = ({
       </div>
 
       {/* Static handles from props */}
-
       {handleValues?.map((value) => (
         <Handle
           key={value.id}
@@ -165,22 +148,16 @@ export const BaseNode = ({
           position={value.position}
           style={{
             background: "#ffffff",
-
             border: "2px solid #6B48CC",
-
             width: 12,
-
             height: 12,
-
             borderRadius: "50%",
-
             ...value.style,
           }}
         />
       ))}
 
       {/* Dynamic handles from variables */}
-
       {dynamicHandles?.map((handle) => (
         <div key={handle.id}>
           {console.log(handle)}

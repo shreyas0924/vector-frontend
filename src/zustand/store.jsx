@@ -9,9 +9,7 @@ import {
 
 export const useStore = create((set, get) => ({
   nodes: [],
-
   edges: [],
-
   nodeIDs: {}, // Store node IDs based on type
   customNodes: [],
 
@@ -20,19 +18,7 @@ export const useStore = create((set, get) => ({
       customNodes: [...state.customNodes, nodeConfig],
     }));
   },
-  // getNodeID: (type) => {
-  //   const newIDs = { ...get().nodeIDs };
 
-  //   if (newIDs[type] === undefined) {
-  //     newIDs[type] = 0;
-  //   }
-
-  //   newIDs[type] += 1;
-
-  //   set({ nodeIDs: newIDs });
-
-  //   return `${type}-${newIDs[type]}`;
-  // },
   getNodeID: (type) => {
     set((state) => {
       const newID = (state.nodeIDs[type] || 0) + 1;
@@ -99,15 +85,4 @@ export const useStore = create((set, get) => ({
       }),
     });
   },
-  //  updateEdgeField: (nodeId, fieldName, fieldValue) => {
-  //   set({
-  //     nodes: get().nodes.map((node) => {
-  //       if (node.id === nodeId) {
-  //         node.data = { ...node.data, [fieldName]: fieldValue };
-  //       }
-
-  //       return node;
-  //     }),
-  //   });
-  // },
 }));

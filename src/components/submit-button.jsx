@@ -7,7 +7,6 @@ export const SubmitButton = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
-    
     try {
       setIsLoading(true);
       const response = await fetch("http://localhost:8000/pipelines/parse", {
@@ -33,11 +32,7 @@ export const SubmitButton = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+     className="flex justify-center align-middle m-8" 
     >
       {console.log(nodes)}
       {isLoading ? (
