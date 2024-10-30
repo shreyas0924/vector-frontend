@@ -274,6 +274,7 @@ export const BaseNode = ({
 
       if (!areHandlesEqual) {
         useStore.getState().updateNodeField(id, "handles", dynamicHandles);
+        // useStore.getState().updateEd(id, "handles", dynamicHandles);
       }
     }
   }, [dynamicHandles, id, data?.handles]);
